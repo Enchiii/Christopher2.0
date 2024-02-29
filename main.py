@@ -28,7 +28,8 @@ class Decrypter:
 
         if self.threads_number < 1 or not (self.threads_number / 1).is_integer():
             raise ThreadsNumberError
-
+            
+    @staticmethod
     def remove_special_chars(self, message: str) -> str:
         special_chars = "!@#$%^&*()_-+=,<.>?/|;:1234567890 "
         for char in special_chars:
