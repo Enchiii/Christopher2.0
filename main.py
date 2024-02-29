@@ -20,7 +20,6 @@ class Decrypter:
         alphabet: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
         threads_number: int = 1,
     ):
-        # [:50] <- mozna dodac aby ustawic ograniczenie slow np na pierwsze 50
         self.words = pd.read_csv(words)
         self.alphabet = alphabet.upper()
         self.threads_number = threads_number
@@ -30,7 +29,7 @@ class Decrypter:
             raise ThreadsNumberError
             
     @staticmethod
-    def remove_special_chars(self, message: str) -> str:
+    def remove_special_chars(message: str) -> str:
         special_chars = "!@#$%^&*()_-+=,<.>?/|;:1234567890 "
         for char in special_chars:
             message = message.replace(char, "")
@@ -42,7 +41,7 @@ class Decrypter:
         return message.upper().translate(translator)
 
     def decrypt(self, message: str):
-        def decrypt_msg(message: str, words_set: object, depth: int = 50):
+        def decrypt_msg(message: str, words_set, depth: int = 50):
             # parametr depth wplywa na minimalna ilosc slow w wiadomosci aby zostala dodana do wynikow
             min_words: int = ceil(len(message) / depth)
 
@@ -89,7 +88,7 @@ class Decrypter:
                 args=(
                     message,
                     self.words["word"][
-                        i * self.threshold : self.threshold + i * self.threshold
+                        i * self.threshold: self.threshold + i * self.threshold
                     ],
                 ),
             )
