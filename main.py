@@ -70,8 +70,8 @@ class Decrypter:
                         words_counter += len(re.findall(check_word, result))
 
                     if words_counter == min_words:
-                        self.possible_results = np.append(self.possible_results, [coded_alphabet, result])
-                        print(coded_alphabet, '  ', result)
+                        self.possible_results = np.append(self.possible_results, [f"alphabet: {coded_alphabet} message: {result}"])
+                        print(coded_alphabet, ' ', result)
                         break
 
         threads: list = []
@@ -93,7 +93,7 @@ class Decrypter:
         for t in threads:
             t.join()
 
-        self.possible_results.reshape(len(self.possible_results), 2)
+        self.possible_results.reshape(len(self.possible_results) // 2, 2)
         df = pd.DataFrame(self.possible_results, columns=["Alphabet", "Message"])
         df.to_csv(f'{self.results_file_name}.csv')
 
