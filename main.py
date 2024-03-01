@@ -70,9 +70,11 @@ class Decrypter:
                         words_counter += len(re.findall(check_word, result))
 
                     if words_counter == min_words:
-                        self.possible_results = np.append(self.possible_results, [[coded_alphabet, result]])
+                        self.possible_results = np.append(self.possible_results, [coded_alphabet, result])
+                        print(coded_alphabet, '  ', result)
                         break
 
+        threads: list = []
         for i in range(self.threads_number):
             thread = Thread(
                 target=decrypt_msg,
@@ -83,9 +85,16 @@ class Decrypter:
                     ],
                 ),
             )
-            thread.start()
+            threads.append(thread)
 
-        df = pd.DataFrame(self.possible_results)
+        for t in threads:
+            t.start()
+
+        for t in threads:
+            t.join()
+
+        self.possible_results.reshape(len(self.possible_results), 2)
+        df = pd.DataFrame(self.possible_results, columns=["Alphabet", "Message"])
         df.to_csv(f'{self.results_file_name}.csv')
 
         if self.print_results:
@@ -106,7 +115,7 @@ class Decrypter:
         return result
 
 
-decrypter = Decrypter(threads_number=50)
+decrypter = Decrypter(threads_number=150)
 
 msg = decrypter.remove_special_chars("abacja")
 msg = decrypter.encrypt(msg, "abaka")
